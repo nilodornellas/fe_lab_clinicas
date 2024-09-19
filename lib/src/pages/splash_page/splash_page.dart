@@ -19,11 +19,12 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(''),
-        ),
-        body: Center(
-          child: Image.asset('assets/images/logo_vertical.png'),
-        ));
+      appBar: AppBar(
+        title: const Text(''),
+      ),
+      body: Center(
+        child: Image.asset('assets/images/logo_vertical.png'),
+      ),
+    );
   }
 }
