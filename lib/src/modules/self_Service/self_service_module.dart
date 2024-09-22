@@ -12,8 +12,9 @@ import 'package:flutter_getit/flutter_getit.dart';
 
 class SelfServiceModule extends FlutterGetItModule {
   @override
-  List<Bind<Object>> get bindings =>
-      [Bind.lazySingleton((i) => SelfServiceController())];
+  List<Bind<Object>> get bindings => [
+        Bind.lazySingleton((i) => SelfServiceController()),
+      ];
 
   @override
   String get moduleRouteName => '/self-service';
