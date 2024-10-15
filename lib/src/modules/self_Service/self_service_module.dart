@@ -28,7 +28,7 @@ class SelfServiceModule extends FlutterGetItModule {
         '/': (context) => const SelfServicePage(),
         '/whoIAm': (context) => const WhoIAmPage(),
         '/find-patient': (context) => const FindPatientRouter(),
-        '/patient': (context) => PatientPage(),
+        '/patient': (context) => const PatientPage(),
         '/documents': (context) => const DocumentsPage(),
         '/documents/scan': (context) => const DocumentsScanPage(),
         '/documents/confirm': (context) => const DocumentsScanConfirmPage(),
