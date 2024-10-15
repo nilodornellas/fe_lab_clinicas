@@ -15,7 +15,9 @@ enum FormSteps {
 
 class SelfServiceController with MessageStateMixin {
   final _step = Signal(FormSteps.none);
+
   var _model = const SelfServiceModel();
+  SelfServiceModel get model => _model;
 
   FormSteps get step => _step();
 

@@ -1,9 +1,12 @@
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:fe_lab_clinicas_core/fe_lab_clinicas_core.dart';
+import 'package:fe_lab_clinicas_self_service/src/model/self_service_model.dart';
 import 'package:fe_lab_clinicas_self_service/src/modules/self_Service/patient/patient_form_controller.dart';
+import 'package:fe_lab_clinicas_self_service/src/modules/self_Service/self_service_controller.dart';
 import 'package:fe_lab_clinicas_self_service/src/modules/self_Service/widget/lab_clinicas_self_service_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_getit/flutter_getit.dart';
 import 'package:validatorless/validatorless.dart';
 
 class PatientPage extends StatefulWidget {
@@ -15,6 +18,21 @@ class PatientPage extends StatefulWidget {
 
 class _PatientPageState extends State<PatientPage> with PatientFormController {
   final formKey = GlobalKey<FormState>();
+  final selfServiceController = Injector.get<SelfServiceController>();
+
+  late bool patientFound;
+  late bool enableForm;
+
+  @override
+  void initState() {
+    super.initState();
+    final SelfServiceModel(:patient) = selfServiceController.model;
+
+    patientFound = patient != null;
+    enableForm = !patientFound;
+
+    initializeForm(patient);
+  }
 
   @override
   void dispose() {
@@ -45,23 +63,46 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
               key: formKey,
               child: Column(
                 children: [
-                  Image.asset('assets/images/check_image.png'),
+                  Visibility(
+                    visible: patientFound,
+                    replacement: Image.asset('assets/images/lupa_icon.png'),
+                    child: Image.asset('assets/images/check_icon.png'),
+                  ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'Cadastro Encontrado',
-                    style: LabClinicasTheme.titleSmallStyle,
+                  Visibility(
+                    visible: patientFound,
+                    replacement: const Text(
+                      'Cadastro não encontrado',
+                      style: LabClinicasTheme.titleSmallStyle,
+                    ),
+                    child: const Text(
+                      'Cadastro Encontrado',
+                      style: LabClinicasTheme.titleSmallStyle,
+                    ),
                   ),
                   const SizedBox(height: 32),
-                  const Text(
-                    'Confirma os dados do seu cadastro',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: LabClinicasTheme.blueColor,
+                  Visibility(
+                    visible: patientFound,
+                    replacement: const Text(
+                      'Preencha o formulário abaixo, para fazer o seu cadastro',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: LabClinicasTheme.blueColor,
+                      ),
+                    ),
+                    child: const Text(
+                      'Confirma os dados do seu cadastro',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: LabClinicasTheme.blueColor,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: nameEC,
                     validator: Validatorless.required('Nome obrigatório'),
                     decoration: const InputDecoration(
@@ -70,6 +111,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: emailEC,
                     validator: Validatorless.multiple([
                       Validatorless.required('Email obrigatório'),
@@ -81,6 +123,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: phoneEC,
                     validator: Validatorless.required('Telefone obrigatório'),
                     inputFormatters: [
@@ -93,6 +136,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: documentEC,
                     validator: Validatorless.required('CPF obrigatório'),
                     inputFormatters: [
@@ -105,6 +149,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: cepEC,
                     validator: Validatorless.required('CEP obrigatório'),
                     inputFormatters: [
@@ -121,6 +166,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                       Flexible(
                         flex: 3,
                         child: TextFormField(
+                          readOnly: !enableForm,
                           controller: streetEC,
                           validator:
                               Validatorless.required('Endereço obrigatório'),
@@ -133,6 +179,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                       Flexible(
                         flex: 1,
                         child: TextFormField(
+                          readOnly: !enableForm,
                           controller: numberEC,
                           validator:
                               Validatorless.required('Número obrigatório'),
@@ -148,6 +195,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          readOnly: !enableForm,
                           controller: complementEC,
                           decoration: const InputDecoration(
                             label: Text('Complemento'),
@@ -157,6 +205,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
+                          readOnly: !enableForm,
                           controller: stateEC,
                           validator:
                               Validatorless.required('Estado obrigatório'),
@@ -172,6 +221,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                     children: [
                       Expanded(
                         child: TextFormField(
+                          readOnly: !enableForm,
                           controller: cityEC,
                           validator:
                               Validatorless.required('Cidade obrigatória'),
@@ -183,6 +233,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                       const SizedBox(width: 10),
                       Expanded(
                         child: TextFormField(
+                          readOnly: !enableForm,
                           controller: districtEC,
                           validator:
                               Validatorless.required('Bairro obrigatório'),
@@ -195,6 +246,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: guardianEC,
                     decoration: const InputDecoration(
                       label: Text('Responsavél'),
@@ -202,6 +254,7 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                   ),
                   const SizedBox(height: 16),
                   TextFormField(
+                    readOnly: !enableForm,
                     controller: guardianIdentificationNumberEC,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -212,28 +265,47 @@ class _PatientPageState extends State<PatientPage> with PatientFormController {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: OutlinedButton(
-                            onPressed: () {},
-                            child: const Text('EDITAR'),
-                          ),
+                  Visibility(
+                    replacement: SizedBox(
+                      width: double.infinity,
+                      height: 48,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Visibility(
+                          visible: !patientFound,
+                          replacement: const Text('SALVAR E CONTINUAR'),
+                          child: const Text('CADASTRAR'),
                         ),
                       ),
-                      const SizedBox(width: 17),
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            child: const Text('CONTINUAR'),
+                    ),
+                    visible: !enableForm,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 48,
+                            child: OutlinedButton(
+                              onPressed: () {
+                                setState(() {
+                                  enableForm = true;
+                                });
+                              },
+                              child: const Text('EDITAR'),
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 17),
+                        Expanded(
+                          child: SizedBox(
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              child: const Text('CONTINUAR'),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   )
                 ],
               ),
