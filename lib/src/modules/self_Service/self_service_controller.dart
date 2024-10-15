@@ -27,7 +27,7 @@ class SelfServiceController with MessageStateMixin {
 
   void setWhoIAmDataStepAndNext(String name, String lastName) {
     _model = _model.copyWith(name: () => name, lastName: () => lastName);
-    _step.set(FormSteps.findPatient);
+    _step.set(FormSteps.findPatient, force: true);
   }
 
   void clearForm() {
@@ -36,11 +36,18 @@ class SelfServiceController with MessageStateMixin {
 
   void goToFormPatient(PatientModel? patient) {
     _model = _model.copyWith(patient: () => patient);
-    _step.set(FormSteps.patient);
+    _step.set(FormSteps.patient, force: true);
   }
 
   void restartProcess() {
-    _step.set(FormSteps.restart);
+    _step.set(FormSteps.restart, force: true);
     clearForm();
+  }
+
+  void updatePatientAndGoDocument(PatientModel? patient) {
+    _model = _model.copyWith(
+      patient: () => patient,
+    );
+    _step.set(FormSteps.documents, force: true);
   }
 }
