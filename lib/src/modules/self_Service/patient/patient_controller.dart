@@ -17,7 +17,7 @@ class PatientController with MessageStateMixin {
     _nextStep.value = true;
   }
 
-  void updateAndNext(PatientModel model) async {
+  Future<void> updateAndNext(PatientModel model) async {
     final updateResult = await _repository.update(model);
 
     switch (updateResult) {
@@ -26,6 +26,19 @@ class PatientController with MessageStateMixin {
       case Right():
         showInfo('Paciente atualizado com sucesso');
         patient = model;
+        goNextStep();
+    }
+  }
+
+  Future<void> saveAndNext(RegisterPatientModel registerPatientModel) async {
+    final result = await _repository.register(registerPatientModel);
+
+    switch (result) {
+      case Left():
+        showError('Erro ao cadastrar dados do paciente, chame o atendente');
+      case Right(value: final patient):
+        showInfo('Paciente cadastrado com sucesso');
+        this.patient = patient;
         goNextStep();
     }
   }
