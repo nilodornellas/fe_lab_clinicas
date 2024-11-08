@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:fe_lab_clinicas_core/fe_lab_clinicas_core.dart';
 import 'package:fe_lab_clinicas_self_service/src/modules/self_Service/widget/lab_clinicas_self_service_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -46,12 +47,12 @@ class _DocumentsScanPageState extends State<DocumentsScanPage> {
             child: Column(
               children: [
                 Image.asset('assets/images/cam_icon.png'),
-                const SizedBox(height: 24),
+                const SizedBox(height: 15),
                 const Text(
                   'TIRAR A FOTO AGORA',
                   style: LabClinicasTheme.titleSmallStyle,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 15),
                 const Text(
                   'Posicione o documento dentro do quadrado abaixo e aperte o botão para tirar a foto',
                   textAlign: TextAlign.center,
@@ -61,7 +62,7 @@ class _DocumentsScanPageState extends State<DocumentsScanPage> {
                     color: LabClinicasTheme.blueColor,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 20),
                 FutureBuilder(
                   future: cameraController.initialize(),
                   builder: (context, snapshot) {
@@ -76,7 +77,24 @@ class _DocumentsScanPageState extends State<DocumentsScanPage> {
 
                       case AsyncSnapshot(connectionState: ConnectionState.done):
                         if (cameraController.value.isInitialized) {
-                          return CameraPreview(cameraController);
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: SizedBox(
+                              width: sizeOf.width * .4,
+                              child: CameraPreview(
+                                cameraController,
+                                child: DottedBorder(
+                                  dashPattern: const [1, 10, 1, 3],
+                                  borderType: BorderType.RRect,
+                                  strokeWidth: 4,
+                                  radius: const Radius.circular(16),
+                                  color: LabClinicasTheme.orangeColor,
+                                  strokeCap: StrokeCap.square,
+                                  child: const SizedBox.expand(),
+                                ),
+                              ),
+                            ),
+                          );
                         }
                     }
                     return const Center(
@@ -84,6 +102,15 @@ class _DocumentsScanPageState extends State<DocumentsScanPage> {
                     );
                   },
                 ),
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: sizeOf.width * .8,
+                  height: 48,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text('TIRAR FOTO'),
+                  ),
+                )
               ],
             ),
           ),
