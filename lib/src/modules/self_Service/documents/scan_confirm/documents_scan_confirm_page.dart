@@ -77,7 +77,18 @@ class DocumentsScanConfirmPage extends StatelessWidget {
                       child: SizedBox(
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            final nav = Navigator.of(context);
+                            final imageBytes = await foto.readAsBytes();
+                            final fileName = foto.name;
+
+                            await controller
+                                .uploadImage(imageBytes, fileName)
+                                .then((value) {
+                              nav.pop();
+                              nav.pop(controller.pathRemoteStorage.value);
+                            });
+                          },
                           child: const Text('SALVAR'),
                         ),
                       ),
